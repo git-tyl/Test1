@@ -1,26 +1,36 @@
-import React, { Component } from "react";
-
-import { StyleSheet, Text, View, TextInput, ImageBackground } from "react-native";
-
+import React, {Component} from "react";
+import {StyleSheet, Text, View, TextInput, Image,ImageBackground} from "react-native";
 import Forecast from "./Forecast";
 import OpenWeatherMap from "./open_weather_map";
 
 class WeatherProject extends Component {
-  constructor(props) {
+  constructor(props){
     super(props);
-    this.state = { zip: "", forecast: null };
+    this.state = { zip: "", forecast: null};
   }
 
   _handleTextChange = event => {
     let zip = event.nativeEvent.text;
+    // this.setState({zip:event.nativeEvent.text });
     OpenWeatherMap.fetchForecast(zip).then(forecast => {
-      this.setState({ forecast: forecast });
-    });
-  };
+      console.log(forecast);
+      this.setState({forecast:forecast});
+    })
+  }
 
-  render() {
+  // <Text style={styles.welcome}>
+  //   Your input {this.state.zip}
+  // </Text>
+  // {content}
+  // <TextInput
+  //   style={styles.input}
+  //   onSubmitEditing={this._handleTextChange}
+  // />
+
+  render(){
     let content = null;
-    if (this.state.forecast !== null) {
+
+    if (this.state.forecast !== null){
       content = (
         <Forecast
           main={this.state.forecast.main}
@@ -29,13 +39,15 @@ class WeatherProject extends Component {
         />
       );
     }
-    return (
+
+    return(
       <View style={styles.container}>
+
+
         <ImageBackground
           source={require("./artAssets/flowers.png")}
           resizeMode="cover"
-          style={styles.backdrop}
-        >
+          style={styles.backdrop}>
           <View style={styles.overlay}>
             <View style={styles.row}>
               <Text style={styles.mainText}>
@@ -44,16 +56,19 @@ class WeatherProject extends Component {
               <View style={styles.zipContainer}>
                 <TextInput
                   style={[styles.zipCode, styles.mainText]}
-                  onSubmitEditing={this._handleTextChange}
-                  underlineColorAndroid="transparent"
+                  onSubmitEditing = {event=> this._handleTextChange(event)}
                 />
               </View>
             </View>
             {content}
           </View>
         </ImageBackground>
+
+
+
+
       </View>
-    );
+    )
   }
 }
 
@@ -62,16 +77,17 @@ const baseFontSize = 16;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    paddingTop: 30 },
+    backgroundColor: "#666666",
+  },
   backdrop: {
-    flex: 1,
-    flexDirection: "column",
-    width: '100%',
-    height: '100%'
-   },
+    flex:1,
+    flexDirection:"column",
+    alignItems: "stretch",
+  },
   overlay: {
-    paddingTop: 5,
+    paddingTop:5,
     backgroundColor: "#000000",
     opacity: 0.5,
     flexDirection: "column",
@@ -83,15 +99,28 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     padding: 30
   },
-  zipContainer: {
+  zipContainer:{
     height: baseFontSize + 10,
     borderBottomColor: "#DDDDDD",
-    borderBottomWidth: 1,
+    borderBottomWidth:1,
     marginLeft: 5,
-    marginTop: 3
+    marginTop:3
   },
-  zipCode: { flex: 1, flexBasis: 1, width: 50, height: baseFontSize },
-  mainText: { fontSize: baseFontSize, color: "#FFFFFF" }
+  zipCode:{
+    flex: 1,
+    flexBasis: 1,
+    width: 50,
+    height: baseFontSize
+  },
+  Welcome: {fontSize:20, textAlign: "center", margin:10},
+  input: {
+    fontSize: 20,
+    borderWidth: 2,
+    padding: 2,
+    height: 40,
+    width: 100,
+    textAlign: "center"
+  }
 });
 
 export default WeatherProject;
